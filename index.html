@@ -8,6 +8,7 @@
     <meta name="author" content="Image Compression Tool">
     <title>Free Image Compression Tool - Optimize Your Images Online</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #2563eb;
@@ -17,6 +18,20 @@
             --border-color: #e2e8f0;
             --success-color: #22c55e;
             --error-color: #ef4444;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --background-color: #0f172a;
+            --text-color: #f1f5f9;
+            --border-color: #1e293b;
+            --card-bg: #1e293b;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2);
+            --gradient: linear-gradient(135deg, #3b82f6, #2563eb);
         }
 
         * {
@@ -31,6 +46,7 @@
             color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -40,27 +56,62 @@
         }
 
         header {
-            background-color: white;
-            padding: 2rem 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            padding: 1rem 0;
+            box-shadow: var(--card-shadow);
             margin-bottom: 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] header {
+            background-color: rgba(30, 41, 59, 0.8);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
-            text-align: center;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
             font-size: 2.5rem;
             font-weight: 600;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header-subtitle {
-            text-align: center;
             color: #64748b;
             font-size: 1.1rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--border-color);
+            transform: rotate(180deg);
         }
 
         .ad-container {
@@ -68,22 +119,42 @@
             max-width: 728px;
             height: 90px;
             margin: 2rem auto;
-            background-color: white;
+            background-color: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px dashed var(--border-color);
             border-radius: 8px;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         .compression-tool {
-            background-color: white;
+            background-color: var(--card-bg);
             padding: 2rem;
             border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            box-shadow: var(--card-shadow);
             margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compression-tool::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transform-origin: left;
             transition: transform 0.3s ease;
+        }
+
+        .compression-tool:hover::before {
+            transform: scaleX(1);
         }
 
         .compression-tool:hover {
@@ -98,12 +169,31 @@
             margin-bottom: 2rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            background-color: #f8fafc;
+            background-color: var(--background-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .upload-section:hover::before {
+            transform: translateX(100%);
         }
 
         .upload-section.dragover {
             border-color: var(--primary-color);
-            background-color: #eff6ff;
+            background-color: rgba(37, 99, 235, 0.1);
+            transform: scale(1.02);
         }
 
         .upload-section input[type="file"] {
@@ -114,12 +204,37 @@
             font-size: 3rem;
             color: var(--primary-color);
             margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            border-radius: 50%;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .upload-section:hover .upload-icon::after {
+            opacity: 0.1;
+            transform: scale(1.2);
+        }
+
+        .upload-section:hover .upload-icon {
+            transform: translateY(-5px);
         }
 
         .upload-text {
             font-size: 1.2rem;
             color: var(--text-color);
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
 
         .upload-subtext {
@@ -130,8 +245,27 @@
         .compression-options {
             margin: 2rem 0;
             padding: 1.5rem;
-            background-color: #f8fafc;
+            background-color: var(--background-color);
             border-radius: 12px;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compression-options::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .compression-options:hover::before {
+            opacity: 0.05;
         }
 
         .quality-label {
@@ -140,6 +274,8 @@
             align-items: center;
             margin-bottom: 1rem;
             font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .quality-slider {
@@ -149,16 +285,19 @@
             background: var(--border-color);
             border-radius: 3px;
             outline: none;
+            position: relative;
+            z-index: 1;
         }
 
         .quality-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
-            background: var(--primary-color);
+            background: var(--gradient);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .quality-slider::-webkit-slider-thumb:hover {
@@ -174,20 +313,58 @@
 
         .preview-box {
             text-align: center;
-            background-color: #f8fafc;
+            background-color: var(--background-color);
             padding: 1.5rem;
             border-radius: 12px;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .preview-box:hover::after {
+            transform: translateX(100%);
         }
 
         .preview-box:hover {
             transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
         }
 
         .preview-box h3 {
             color: var(--text-color);
             margin-bottom: 1rem;
             font-weight: 500;
+            position: relative;
+            display: inline-block;
+        }
+
+        .preview-box h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-box:hover h3::after {
+            transform: scaleX(1);
         }
 
         .preview-box img {
@@ -198,6 +375,11 @@
             object-fit: contain;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .preview-box:hover img {
+            transform: scale(1.02);
         }
 
         .stats {
@@ -207,12 +389,123 @@
             font-size: 0.9rem;
             color: #64748b;
             padding: 0.5rem;
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stats:hover::before {
+            opacity: 0.05;
+        }
+
+        .size-comparison {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--background-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .size-comparison::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .size-comparison:hover::before {
+            opacity: 0.05;
+        }
+
+        .size-comparison h3 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-weight: 500;
+            position: relative;
+            display: inline-block;
+        }
+
+        .size-comparison h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .size-comparison:hover h3::after {
+            transform: scaleX(1);
+        }
+
+        .comparison-bar {
+            height: 24px;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .comparison-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .comparison-fill:hover::after {
+            transform: translateX(100%);
+        }
+
+        .comparison-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
         }
 
         button {
-            background-color: var(--primary-color);
+            background: var(--gradient);
             color: white;
             padding: 1rem 2rem;
             border: none;
@@ -226,11 +519,29 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        button:hover::before {
+            transform: translateX(100%);
         }
 
         button:hover {
-            background-color: var(--secondary-color);
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         button:active {
@@ -246,10 +557,70 @@
             color: var(--error-color);
             margin-top: 1rem;
             padding: 0.75rem;
-            background-color: #fef2f2;
+            background-color: rgba(239, 68, 68, 0.1);
             border-radius: 6px;
             display: none;
             animation: slideIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--error-color);
+            animation: progress 3s linear;
+        }
+
+        @keyframes progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 3px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .loading .progress-bar {
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes slideIn {
@@ -283,6 +654,12 @@
             .upload-section {
                 padding: 2rem 1rem;
             }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -302,8 +679,15 @@
 <body>
     <header>
         <div class="container">
-            <h1>Image Compression Tool</h1>
-            <p class="header-subtitle">Compress your images while maintaining quality</p>
+            <div class="header-content">
+                <div>
+                    <h1>Image Compression Tool</h1>
+                    <p class="header-subtitle">Compress your images while maintaining quality</p>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -323,10 +707,13 @@
         <div class="compression-tool">
             <div class="upload-section" id="dropZone">
                 <input type="file" id="fileInput" accept="image/*" multiple>
-                <div class="upload-icon">📁</div>
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
                 <p class="upload-text">Drag and drop your images here or click to select</p>
                 <p class="upload-subtext">Supported formats: JPG, PNG, WebP</p>
                 <div class="error-message" id="errorMessage"></div>
+                <div class="progress-bar"></div>
             </div>
 
             <div class="compression-options">
@@ -350,8 +737,19 @@
                 </div>
             </div>
 
+            <div class="size-comparison">
+                <h3>Size Comparison</h3>
+                <div class="comparison-bar">
+                    <div class="comparison-fill" id="comparisonFill"></div>
+                </div>
+                <div class="comparison-labels">
+                    <span id="originalSize">Original: 0 KB</span>
+                    <span id="compressedSize">Compressed: 0 KB</span>
+                </div>
+            </div>
+
             <button class="download-btn" id="downloadBtn">
-                <span>📥</span>
+                <i class="fas fa-download"></i>
                 Download Compressed Image
             </button>
         </div>
@@ -370,6 +768,27 @@
     </div>
 
     <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
         // File input handling
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
@@ -381,6 +800,9 @@
         const compressedStats = document.getElementById('compressedStats');
         const downloadBtn = document.getElementById('downloadBtn');
         const errorMessage = document.getElementById('errorMessage');
+        const comparisonFill = document.getElementById('comparisonFill');
+        const originalSize = document.getElementById('originalSize');
+        const compressedSize = document.getElementById('compressedSize');
 
         // Drag and drop handlers
         dropZone.addEventListener('dragover', (e) => {
@@ -426,12 +848,17 @@
                 return;
             }
 
+            // Add loading state
+            dropZone.classList.add('loading');
+            downloadBtn.style.display = 'none';
+
             const reader = new FileReader();
             reader.readAsDataURL(file);
 
             reader.onload = (e) => {
                 originalPreview.src = e.target.result;
                 originalStats.innerHTML = `Size: ${formatFileSize(file.size)}<br>Type: ${file.type}`;
+                originalSize.textContent = `Original: ${formatFileSize(file.size)}`;
                 
                 const img = new Image();
                 img.src = e.target.result;
@@ -454,8 +881,16 @@
                     const base64String = compressedDataUrl.split(',')[1];
                     const compressedSize = Math.ceil((base64String.length * 3) / 4);
                     compressedStats.innerHTML = `Size: ${formatFileSize(compressedSize)}<br>Type: ${file.type}`;
+                    compressedSize.textContent = `Compressed: ${formatFileSize(compressedSize)}`;
                     
+                    // Update comparison bar
+                    const compressionRatio = (compressedSize / file.size) * 100;
+                    comparisonFill.style.width = `${compressionRatio}%`;
+                    
+                    // Remove loading state and show download button
+                    dropZone.classList.remove('loading');
                     downloadBtn.style.display = 'flex';
+                    
                     downloadBtn.onclick = () => {
                         const link = document.createElement('a');
                         link.download = `compressed_${file.name}`;
@@ -466,11 +901,13 @@
 
                 img.onerror = () => {
                     showError('Error loading image. Please try again.');
+                    dropZone.classList.remove('loading');
                 };
             };
 
             reader.onerror = () => {
                 showError('Error reading file. Please try again.');
+                dropZone.classList.remove('loading');
             };
         }
 
@@ -491,4 +928,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
